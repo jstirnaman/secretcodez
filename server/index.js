@@ -26,6 +26,10 @@ module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.get('/api/codes', function (req, res) {
+    if (req.headers['authorization'] !== "Bearer some bs") {
+      return res.status(401).send('Unauthorized');
+    }
+
     return res.status(200).send({
       codes: [
         { id: 1, description: 'Secret code #1 is: super-secret-code1' },

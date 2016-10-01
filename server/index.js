@@ -9,6 +9,8 @@
 //   });
 // };
 
+const bodyParser = require('body-parser');
+
 module.exports = function(app) {
   var globSync   = require('glob').sync;
   var mocks      = globSync('./mocks/**/*.js', { cwd: __dirname }).map(require);
@@ -21,4 +23,14 @@ module.exports = function(app) {
   mocks.forEach(function(route) { route(app); });
   proxies.forEach(function(route) { route(app); });
 
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.get('/api/codes', function (req, res) {
+    return res.status(200).send({
+      codes: [
+        { id: 1, description: 'Secret code #1 is: super-secret-code1' },
+        { id: 2, description: 'Secret code #2 is: super-secret-code2' }
+      ]
+    });
+  });
 };
